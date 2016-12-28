@@ -29,7 +29,7 @@ public class ResourceMap {
     }
 
     public void addResource(Resource r, Integer requiredInstances) throws ResourceException {
-        final int[] pos = {-1};
+        final Integer[] pos = {-1};
         resources.forEach(res -> {
             if (Objects.equals(res.getResourceName(), r.getResourceName())) {
                 pos[0] = 0;
@@ -39,9 +39,22 @@ public class ResourceMap {
             throw new ResourceException("Resource is already in list!");
         }
         resources.add(r);
-        r.allocateToProcess(ofProcess);
         maximum.add(requiredInstances);
         allocated.add(0);
+    }
+
+    public void requestForResource(Resource r, Integer ins) throws ResourceException {
+        if (!resources.contains(r)) {
+            throw new ResourceException("The resource is not in requirement list for this process!");
+        }
+        if (maximum.get(resources.indexOf(r)) < ins) {
+            throw new ResourceException("This process requires less instances of the resource than requested!");
+        }
+        if ((maximum.get(resources.indexOf(r)) - allocated.get(resources.indexOf(r))) < ins) {
+            throw new ResourceException("This process requires less instances of the resource than requested!");
+        }
+        r.allocateToProcess(ofProcess);
+        allocated.set(resources.indexOf(r), allocated.get(resources.indexOf(r)) + 1);
     }
 
     public Integer getRequiredInstancesCount(Resource r) {

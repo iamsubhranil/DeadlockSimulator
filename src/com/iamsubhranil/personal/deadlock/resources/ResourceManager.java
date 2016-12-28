@@ -13,5 +13,10 @@ public class ResourceManager {
 
     private static final ArrayList<Resource> resources = new ArrayList<>();
 
+    public static Resource generateNewResource(String name, int totIns) {
+        Resource resource = new Resource(name, totIns);
+        resources.add(resource);
+        return resource;
+    }
 
 }
