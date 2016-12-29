@@ -28,6 +28,10 @@ public class ResourceMap {
 
     }
 
+    public ArrayList<Resource> getRequiredResources() {
+        return resources;
+    }
+
     public void addResource(Resource r, Integer requiredInstances) throws ResourceException {
         final Integer[] pos = {-1};
         resources.forEach(res -> {
@@ -61,21 +65,21 @@ public class ResourceMap {
         if (resources.contains(r)) {
             return maximum.get(resources.indexOf(r));
         }
-        return -1;
+        return 0;
     }
 
     public Integer getAllocatedInstancesCount(Resource r) {
         if (resources.contains(r)) {
             return allocated.get(resources.indexOf(r));
         }
-        return -1;
+        return 0;
     }
 
     public Integer getReminderInstancesCount(Resource r) {
         if (resources.contains(r)) {
             return maximum.get(resources.indexOf(r)) - allocated.get(resources.indexOf(r));
         }
-        return -1;
+        return 0;
     }
 
     public void releaseResource(Resource r) {

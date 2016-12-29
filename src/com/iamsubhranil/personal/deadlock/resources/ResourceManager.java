@@ -8,6 +8,7 @@
 package com.iamsubhranil.personal.deadlock.resources;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ResourceManager {
 
@@ -17,6 +18,17 @@ public class ResourceManager {
         Resource resource = new Resource(name, totIns);
         resources.add(resource);
         return resource;
+    }
+
+    public static void dummyResources(int resNum) {
+        while (resNum > 0) {
+            generateNewResource("Resource" + resNum, new Random().nextInt(20));
+            resNum--;
+        }
+    }
+
+    public static ArrayList<Resource> getResources() {
+        return resources;
     }
 
 }

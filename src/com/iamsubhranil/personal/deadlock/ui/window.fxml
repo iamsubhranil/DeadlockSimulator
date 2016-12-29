@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity"
+      prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111"
+      fx:controller="com.iamsubhranil.personal.deadlock.ui.WindowController">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <TabPane prefHeight="384.0" prefWidth="580.0" tabClosingPolicy="UNAVAILABLE">
+        <Tab closable="false" text="Processes">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <TableView fx:id="processTable" layoutX="14.0" layoutY="14.0" prefHeight="322.0" prefWidth="555.0">
+                    <columns>
+                        <TableColumn prefWidth="168.0" text="Process Name" fx:id="processNameColumn"/>
+                        <TableColumn prefWidth="176.0" text="Process Identifier" fx:id="pidColumn"/>
+                        <TableColumn prefWidth="210.0" text="Resource Requirement" fx:id="resourceRequirementColumn"/>
+                    </columns>
+                </TableView>
+            </AnchorPane>
+        </Tab>
+        <Tab closable="false" text="Resources">
+            <AnchorPane minHeight="180.0" minWidth="200.0" maxHeight="Infinity" maxWidth="Infinity">
+                <TableView layoutX="6.0" layoutY="14.0" minHeight="318.0" minWidth="567.0" fx:id="resourceTable">
+                    <columns>
+                        <TableColumn editable="false" minWidth="280" text="Resource Name" fx:id="resourceNameColumn"/>
+                        <TableColumn editable="false" minWidth="286.0" text="Instances" fx:id="resourceInstancesColumn">
+                            <columns>
+                                <TableColumn minWidth="93.0" text="Total" fx:id="resourceTotalInstancesColumn"/>
+                                <TableColumn minWidth="123.0" text="Allocated"
+                                             fx:id="resourceAllocatedInstancesColumn"/>
+                                <TableColumn minWidth="69.0" text="Free" fx:id="resourceFreeInstancesColumn"/>
+                            </columns>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+            </AnchorPane>
+        </Tab>
+        <Tab text="Control">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <Label layoutX="14.0" layoutY="22.0" text="Process :"/>
+                <ComboBox layoutX="73.0" layoutY="9.0" prefWidth="150.0"/>
+            </AnchorPane>
+        </Tab>
+        <Tab text="Resource Allocation Graph">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+</VBox>

@@ -8,6 +8,7 @@
 package com.iamsubhranil.personal.deadlock.resources;
 
 import com.iamsubhranil.personal.deadlock.processes.Process;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.Hashtable;
 
@@ -15,14 +16,14 @@ public class Resource {
 
     private final String resourceName;
     private final Hashtable<Process, Integer> processMap = new Hashtable<>();
-    private final int totalInstances;
+    private final SimpleIntegerProperty totalInstances;
+    private final SimpleIntegerProperty allocatedInstances = new SimpleIntegerProperty(0);
     private ResourcePriority resourcePriority;
-    private int allocatedInstances;
 
     public Resource(String res, ResourcePriority resp, int totIns) {
         resourceName = res;
         resourcePriority = resp;
-        totalInstances = totIns;
+        totalInstances = new SimpleIntegerProperty(totIns);
     }
 
     public Resource(String res, int totIns) {
@@ -38,15 +39,15 @@ public class Resource {
     }
 
     public int getTotalInstances() {
-        return totalInstances;
+        return totalInstances.get();
     }
 
     public int getAllocatedInstances() {
-        return allocatedInstances;
+        return allocatedInstances.get();
     }
 
     public int getAvailableInstances() {
-        return totalInstances - allocatedInstances;
+        return totalInstances.subtract(allocatedInstances).intValue();
     }
 
     public synchronized void allocateToProcess(final Process process) throws ResourceException {
@@ -59,7 +60,7 @@ public class Resource {
                 } else {
                     processMap.put(process, 1);
                 }
-                allocatedInstances++;
+                allocatedInstances.set(allocatedInstances.getValue() + 1);
             } else {
                 throw new ResourceException("The process has already been allocated maximum number of this resource!");
             }
@@ -70,7 +71,7 @@ public class Resource {
 
     public synchronized void relocateFromProcess(Process process) {
         processMap.remove(process);
-        allocatedInstances--;
+        allocatedInstances.set(allocatedInstances.getValue() - 1);
     }
 
 }

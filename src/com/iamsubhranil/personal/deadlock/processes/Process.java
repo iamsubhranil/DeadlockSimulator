@@ -10,18 +10,20 @@ package com.iamsubhranil.personal.deadlock.processes;
 import com.iamsubhranil.personal.deadlock.resources.Resource;
 import com.iamsubhranil.personal.deadlock.resources.ResourceException;
 import com.iamsubhranil.personal.deadlock.resources.ResourceMap;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Map;
 
 public class Process {
 
-    private final String processName;
-    private final long pid;
+    private final SimpleStringProperty processName;
+    private final SimpleLongProperty pid;
     private final ResourceMap resourceMap;
 
     public Process(String name, long pid1) {
-        processName = name;
-        pid = pid1;
+        processName = new SimpleStringProperty(name);
+        pid = new SimpleLongProperty(pid1);
         resourceMap = new ResourceMap(this);
     }
 
@@ -40,11 +42,11 @@ public class Process {
     }
 
     public String getProcessName() {
-        return processName;
+        return processName.getValue();
     }
 
-    public long getPID() {
-        return pid;
+    public Long getPid() {
+        return pid.get();
     }
 
 }

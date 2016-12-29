@@ -8,12 +8,12 @@
 package com.iamsubhranil.personal.deadlock.processes;
 
 import com.iamsubhranil.personal.deadlock.resources.Resource;
-import com.iamsubhranil.personal.deadlock.resources.ResourceException;
 import com.iamsubhranil.personal.deadlock.resources.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ProcessManager {
 
@@ -27,6 +27,26 @@ public class ProcessManager {
         return p;
     }
 
+    public static ArrayList<Process> getProcesses() {
+        return processList;
+    }
+
+    public static void dummyProcess(int processNum, int resourceNum) {
+        ResourceManager.dummyResources(resourceNum);
+        while (processNum > 0) {
+            HashMap<Resource, Integer> resourceIntegerHashMap = new HashMap<>();
+            int count = 0;
+            while (count < resourceNum) {
+                resourceIntegerHashMap.put(ResourceManager.getResources().get(count),
+                        new Random().nextInt(ResourceManager.getResources().get(count).getTotalInstances()));
+                count++;
+            }
+            generateNewProcess("Process" + processNum, resourceIntegerHashMap);
+            processNum--;
+        }
+
+    }
+
     public static void main(String[] args) {
         Resource r1 = ResourceManager.generateNewResource("Printer", 4);
         Resource r2 = ResourceManager.generateNewResource("Monitor", 4);
@@ -38,12 +58,7 @@ public class ProcessManager {
         p2rMap.put(r1, 4);
         p2rMap.put(r2, 4);
         Process p2 = generateNewProcess("P2", p1rMap);
-
-        try {
-            p1.getResourceMap().requestForResource(r1, 5);
-        } catch (ResourceException e) {
-            e.printStackTrace();
-        }
+        ResourceManager.dummyResources(5);
     }
 
 }
