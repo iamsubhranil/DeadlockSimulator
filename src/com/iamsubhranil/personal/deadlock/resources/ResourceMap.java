@@ -75,11 +75,17 @@ public class ResourceMap {
         return 0;
     }
 
-    public Integer getReminderInstancesCount(Resource r) {
+    public Integer getRemainderInstancesCount(Resource r) {
         if (resources.contains(r)) {
             return maximum.get(resources.indexOf(r)) - allocated.get(resources.indexOf(r));
         }
         return 0;
+    }
+
+    public String getRemainingRequirementsInString() {
+        final String[] ret = new String[]{""};
+        resources.forEach(resource -> ret[0] = ret[0] + resource.getResourceName() + ": " + getRemainderInstancesCount(resource) + "\n");
+        return ret[0];
     }
 
     public void releaseResource(Resource r) {
