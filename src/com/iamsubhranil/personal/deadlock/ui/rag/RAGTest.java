@@ -22,6 +22,7 @@ public class RAGTest extends Application {
 
     private final AnchorPane anchorPane = new AnchorPane();
     private final double processRad = 30;
+    private int abc = 100;
 
     public static void main(String[] args) {
         System.setProperty("prism.lcdtext", "false");
@@ -59,19 +60,21 @@ public class RAGTest extends Application {
         double centerY = y2 + recRadius / 2;
         double retX = 0;
         double retY = 0;
-        if (centerX > x1) {
+        System.out.println("x1 : " + x1 + "y1 : " + y1 + "\tx2 : " + x2 + " y2 : " + y2 + "\tcenterX : " + centerX + " centerY : " + centerY);
+        if (x1 == x2) {
+            retX = centerX;
+        } else if (centerX > x1) {
             retX = x2;
         } else if (centerX < x1) {
-            retX = x2 + recRadius;
-        } else {
-            retX = centerX;
+            retX = centerX + recRadius / 2;
         }
-        if (centerY > y1) {
+
+        if (y1 == y2) {
+            retY = centerY;
+        } else if (centerY > y1) {
             retY = y2;
         } else if (centerY < y1) {
-            retY = y2 + recRadius;
-        } else {
-            retY = centerY;
+            retY = centerY + recRadius / 2;
         }
 
         ret[0] = retX;
@@ -84,24 +87,14 @@ public class RAGTest extends Application {
         double slope = Math.toDegrees(y1 / x2);
         boolean xBig = x1 > x2;
         boolean yBig = y1 > y2;
-       /* if(x1<x2){
-            slope = slope+82.5;
-        }
-        else if(x1>x2){
-            slope = slope-82.5;
-        }
-        if(y1<y2){
-            slope = slope-82.5;
-        }
-        else if(y1>y2){
-            slope = slope+82.5;
-        }*/
         if (!xBig && !yBig) {
-            slope = slope + 165;
+            slope = slope + 135;
         } else if (xBig && !yBig) {
-            slope = slope - 140;
+            slope = slope - 135;
         } else if (xBig && yBig) {
-            slope = slope + 85;
+            slope = slope + 45;
+        } else {
+            slope = slope + 45;
         }
         return slope;
     }
@@ -111,11 +104,11 @@ public class RAGTest extends Application {
         triangle.getPoints().addAll(0.0, 0.0,
                 0.0, 15.0,
                 15.0, 0.0);
-        triangle.setRotate(decideRotate(x1, y1, x2, y2));
+        triangle.setRotate(decideRotate(x1, y1, x2, y2) + 45);
         double x = decidePoints(x1, y1, x2, y2, recRadius)[0];
         double y = decidePoints(x1, y1, x2, y2, recRadius)[1];
         triangle.setLayoutX(x - 7.5);
-        triangle.setLayoutY(y - 7.5);
+        triangle.setLayoutY(y - 15);
         triangle.setFill(Color.WHITESMOKE);
         triangle.setStroke(Color.BLACK);
         Line line = new Line();
@@ -144,12 +137,12 @@ public class RAGTest extends Application {
 
         drawRequestEdge(px2, px1, 100, ry2, 50);
 
-        drawRequestEdge(200, 450, rx1, rx1, 50);
-        drawRequestEdge(200, 450, 100, ry2, 50);
+        drawRequestEdge(300, 250, rx1, rx1, 50);
+        drawRequestEdge(300, 250, 100, ry2, 50);
 
 
         drawProcess(px1, px1, 0);
         drawProcess(px2, px1, 1);
-        drawProcess(200, 450, 2);
+        drawProcess(300, 250, 2);
     }
 }
