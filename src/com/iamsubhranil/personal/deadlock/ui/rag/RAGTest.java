@@ -84,13 +84,20 @@ public class RAGTest extends Application {
     }
 
     private double decideRotate(double x1, double y1, double x2, double y2) {
-        double slope = Math.toDegrees(y1 / x2);
+        //   double slope = Math.toDegrees(y1 / x2);
+        double slope = 0;
         boolean xBig = x1 > x2;
         boolean yBig = y1 > y2;
         if (!xBig && !yBig) {
-            slope = slope + 135;
+            if (x1 == x2) {
+                slope = y1 > y2 ? slope : slope + 180;
+            } else if (y1 == y2) {
+                slope = x1 > x2 ? slope - 90 : slope + 90;
+            } else {
+                slope = slope + 135;
+            }
         } else if (xBig && !yBig) {
-            slope = slope - 135;
+            slope = slope + 225;
         } else if (xBig && yBig) {
             slope = slope + 45;
         } else {
@@ -101,14 +108,14 @@ public class RAGTest extends Application {
 
     private void drawRequestEdge(double x1, double y1, double x2, double y2, double recRadius) {
         Polygon triangle = new Polygon();
-        triangle.getPoints().addAll(0.0, 0.0,
+        triangle.getPoints().addAll(7.5, 0.0,
                 0.0, 15.0,
-                15.0, 0.0);
-        triangle.setRotate(decideRotate(x1, y1, x2, y2) + 45);
+                15.0, 15.0);
+        triangle.setRotate(decideRotate(x1, y1, x2, y2));
         double x = decidePoints(x1, y1, x2, y2, recRadius)[0];
         double y = decidePoints(x1, y1, x2, y2, recRadius)[1];
         triangle.setLayoutX(x - 7.5);
-        triangle.setLayoutY(y - 15);
+        triangle.setLayoutY(y - 7.5);
         triangle.setFill(Color.WHITESMOKE);
         triangle.setStroke(Color.BLACK);
         Line line = new Line();
@@ -116,7 +123,7 @@ public class RAGTest extends Application {
         line.setEndX(x);
         line.setStartY(y1);
         line.setEndY(y);
-        anchorPane.getChildren().addAll(triangle, line);
+        anchorPane.getChildren().addAll(line, triangle);
 
     }
 
