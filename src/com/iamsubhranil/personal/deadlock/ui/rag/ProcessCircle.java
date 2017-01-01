@@ -8,6 +8,9 @@
 package com.iamsubhranil.personal.deadlock.ui.rag;
 
 import com.iamsubhranil.personal.deadlock.processes.Process;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
@@ -22,10 +25,15 @@ public class ProcessCircle extends Label {
     private final Circle circle;
     private final Label pidLabel;
     private final Tooltip info = new Tooltip();
+    private final ObjectProperty<Paint> paint;
+    private double mouseX;
+    private double mouseY;
 
     public ProcessCircle(Process p, double centerX, double centerY, double radius, Paint fill) {
         super();
-        circle = new Circle(radius, fill);
+        paint = new SimpleObjectProperty<>(fill);
+        circle = new Circle(radius);
+        circle.fillProperty().bind(paint);
         process = p;
         pidLabel = new Label(process.getPid() + "");
         pidLabel.setFont(Font.font(20));
@@ -47,6 +55,36 @@ public class ProcessCircle extends Label {
         setLayoutX(centerX - radius);
         setLayoutY(centerY - radius);
 
+        setOnMousePressed(event -> {
+            mouseX = event.getSceneX();
+            mouseY = event.getSceneY();
+        });
+
+        setOnMouseDragged(event -> {
+            double deltaX = event.getSceneX() - mouseX;
+            double deltaY = event.getSceneY() - mouseY;
+            setLayoutX(getLayoutX() + deltaX);
+            setLayoutY(getLayoutY() + deltaY);
+            mouseX = event.getSceneX();
+            mouseY = event.getSceneY();
+        });
+
+    }
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public double getRadius() {
+        return circle.getRadius();
+    }
+
+    public DoubleProperty radiusProperty() {
+        return circle.radiusProperty();
+    }
+
+    public Paint getPaint() {
+        return paint.get();
     }
 
 }

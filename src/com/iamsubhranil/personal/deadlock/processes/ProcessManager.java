@@ -33,16 +33,21 @@ public class ProcessManager {
 
     public static void dummyProcess(int processNum, int resourceNum) {
         ResourceManager.dummyResources(resourceNum);
-        while (processNum > 0) {
+        int count1 = 0;
+        while (count1 < processNum) {
             HashMap<Resource, Integer> resourceIntegerHashMap = new HashMap<>();
             int count = 0;
             while (count < resourceNum) {
-                resourceIntegerHashMap.put(ResourceManager.getResources().get(count),
-                        new Random().nextInt(ResourceManager.getResources().get(count).getTotalInstances()));
+                try {
+                    resourceIntegerHashMap.put(ResourceManager.getResources().get(count),
+                            new Random().nextInt(ResourceManager.getResources().get(count).getTotalInstances() - 1) + 1);
+                } catch (IllegalArgumentException iae) {
+                    System.out.println(ResourceManager.getResources().get(count).getTotalInstances());
+                }
                 count++;
             }
-            generateNewProcess("Process" + processNum, resourceIntegerHashMap);
-            processNum--;
+            generateNewProcess("Process" + count1, resourceIntegerHashMap);
+            count1++;
         }
 
     }

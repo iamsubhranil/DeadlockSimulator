@@ -21,9 +21,10 @@ public class ResourceManager {
     }
 
     public static void dummyResources(int resNum) {
-        while (resNum > 0) {
-            generateNewResource("Resource" + resNum, new Random().nextInt(20));
-            resNum--;
+        int count = 0;
+        while (count < resNum) {
+            generateNewResource("Resource" + count, new Random().nextInt(19) + 1);
+            count++;
         }
     }
 
