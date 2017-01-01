@@ -34,14 +34,16 @@ public class Edge extends Line {
             endXProperty().bind(Pointer.decideEnd(from.layoutXProperty(), to.layoutXProperty(), to.squareSizeProperty()));
             endYProperty().bind(Pointer.decideEnd(from.layoutYProperty(), to.layoutYProperty(), to.squareSizeProperty()));
         } else {
-            setStartX(to.getLayoutX() + to.getSquareSize());
-            setStartY(to.getLayoutY() + to.getSquareSize());
+            startXProperty().bind(to.layoutXProperty().add(to.squareSizeProperty().divide(2)));
+            startYProperty().bind(to.layoutYProperty().add(to.squareSizeProperty().divide(2)));
+
+            // startXProperty().bind(Pointer.decideEnd(from.layoutXProperty(), to.layoutXProperty(), to.squareSizeProperty()));
+            // startYProperty().bind(Pointer.decideEnd(from.layoutYProperty(), to.layoutYProperty(), to.squareSizeProperty()));
 
             System.out.println("Process " + from.getProcess().getPid() + " has acquired " + to.getResource().getResourceName());
 
-            endXProperty().bind(Pointer.decideEnd(to.layoutXProperty(), from.layoutXProperty(), from.radiusProperty()));
-            endYProperty().bind(Pointer.decideEnd(to.layoutYProperty(), from.layoutYProperty(), from.radiusProperty()));
-
+            endXProperty().bind(Pointer.decideCircleEnd(to.layoutXProperty(), from.layoutXProperty(), from.radiusProperty()));
+            endYProperty().bind(Pointer.decideCircleEnd(to.layoutYProperty(), from.layoutYProperty(), from.radiusProperty()));
         }
 
         setOnMouseEntered(mouseEvent -> {
@@ -52,9 +54,7 @@ public class Edge extends Line {
             }
         });
 
-        setOnMouseExited(m -> {
-            setStroke(Color.BLACK);
-        });
+        setOnMouseExited(m -> setStroke(Color.BLACK));
     }
 
     public Edge(ProcessCircle from, ResourceSquare to) {

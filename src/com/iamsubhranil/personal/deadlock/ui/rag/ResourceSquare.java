@@ -20,6 +20,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+
+import java.util.ArrayList;
 
 public class ResourceSquare extends Label {
 
@@ -27,9 +30,11 @@ public class ResourceSquare extends Label {
     private final Rectangle rectangle;
     private final Label resourceLabel;
     private final StackPane stackPane;
+    private final ArrayList<Circle> instancesList = new ArrayList<>();
     private double mouseX;
     private double mouseY;
     private ObjectProperty<Paint> fill = new SimpleObjectProperty<>(Color.BLACK);
+    private int count = 0;
 
     public ResourceSquare(double size, Resource r) {
         super();
@@ -38,6 +43,7 @@ public class ResourceSquare extends Label {
         rectangle.setFill(Color.valueOf("#1d1d1d"));
         resource = r;
         resourceLabel = new Label(resource.getResourceName());
+        resourceLabel.setFont(Font.font(9));
 
         stackPane = new StackPane(rectangle);
         stackPane.setMaxWidth(size);
@@ -84,6 +90,7 @@ public class ResourceSquare extends Label {
         while (instances > 0) {
             Circle circle = new Circle(2);
             circle.fillProperty().bind(fill);
+            instancesList.add(circle);
             hBox.getChildren().add(circle);
             completedWidth = completedWidth + 7;
             if (completedWidth >= (width - 5)) {
@@ -101,6 +108,9 @@ public class ResourceSquare extends Label {
         fill.setValue(value);
     }
 
+    public Circle getNextInstanceCircle() {
+        return instancesList.get(count++);
+    }
 
     public Paint getPaint() {
         return fill.get();

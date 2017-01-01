@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 public class Pointer {
 
-    public static DoubleProperty decideEnd(DoubleExpression from, DoubleExpression to, DoubleProperty recRad) {
+    public static DoubleProperty decideEnd(DoubleExpression from, DoubleExpression to, DoubleExpression recRad) {
         DoubleProperty ret = new SimpleDoubleProperty(0);
 
         SimpleDoubleProperty centerX = new SimpleDoubleProperty(to.get() + (recRad.get() / 2));
@@ -24,6 +24,10 @@ public class Pointer {
                 .otherwise(Bindings.when(centerX.greaterThan(from)).then(to)
                         .otherwise(centerX.add(recRad.divide(2)))));
         return ret;
+    }
+
+    public static DoubleProperty decideCircleEnd(DoubleExpression from, DoubleProperty to, DoubleProperty cirRad) {
+        return decideEnd(from, to, cirRad.multiply(2));
     }
 
     public static double[] decidePoints(double x1, double y1, double x2, double y2, double recRadius) {

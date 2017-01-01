@@ -7,13 +7,17 @@
 */
 package com.iamsubhranil.personal.deadlock.ui.rag;
 
+import com.iamsubhranil.personal.deadlock.processes.Process;
 import com.iamsubhranil.personal.deadlock.processes.ProcessManager;
+import com.iamsubhranil.personal.deadlock.resources.ResourceException;
 import com.iamsubhranil.personal.deadlock.resources.ResourceManager;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class RAGTest extends Application {
 
@@ -32,7 +36,8 @@ public class RAGTest extends Application {
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
         primaryStage.setScene(s);
         primaryStage.show();
-        draw();
+        //   draw();
+        manual();
     }
 
     private ProcessCircle processAt(double x, double y, int count) {
@@ -48,10 +53,99 @@ public class RAGTest extends Application {
         return resourceSquare;
     }
 
-    private void drawEdgeBetween(ProcessCircle from, ResourceSquare to) {
+    private void drawRequestEdge(ProcessCircle from, ResourceSquare to) {
         Edge edge = new Edge(from, to);
         Triangle triangle = new Triangle(edge);
         anchorPane.getChildren().addAll(edge, triangle);
+    }
+
+    private void drawAllocationEdge(ResourceSquare from, ProcessCircle to) {
+        Edge edge = new Edge(from, to);
+        Triangle triangle = new Triangle(edge);
+        anchorPane.getChildren().addAll(edge, triangle);
+    }
+
+    private void manual() {
+        ProcessManager.dummyProcess(2, 2);
+        Process p1 = ProcessManager.getProcesses().get(0);
+        p1.getResourceMap().getRequiredResources().forEach(resource -> {
+            try {
+                p1.getResourceMap().requestForResource(resource, 1);
+            } catch (ResourceException e) {
+                e.printStackTrace();
+            }
+        });
+        drawAll();
+    }
+
+    private void drawAll() {
+        //   ProcessManager.dummyProcess(5, 5);
+        int num = ResourceManager.getResources().size();
+        double availableWidth = anchorPane.getScene().getWidth() - 100;
+        double gap = 90;
+        double x = 100;
+        double y = 100;
+        int count = 0;
+        double endX = 0;
+        ArrayList<ResourceSquare> resourceSquares = new ArrayList<>();
+        while (count < num) {
+            ResourceSquare resourceSquare = resourceAt(x, y, count);
+            x = x + gap;
+            if (availableWidth < x) {
+                endX = x;
+                x = 100;
+                y += gap;
+            }
+
+            resourceSquares.add(resourceSquare);
+            count++;
+        }
+        double endY = y;
+        x = 50;
+        y = 50;
+        num = ProcessManager.getProcesses().size();
+        gap = 100;
+        count = 0;
+        availableWidth = anchorPane.getScene().getWidth() - 20;
+        ArrayList<ProcessCircle> processCircles = new ArrayList<>();
+        while (count < num) {
+            ProcessCircle processCircle = processAt(x, y, count);
+            x = x + gap;
+            if (y >= 100 && y <= endY) {
+                if (x > 100 && x < endX) {
+                    x = endX + 30;
+                }
+            }
+            if (availableWidth < x) {
+                x = 50;
+                y += gap;
+            }
+            processCircles.add(processCircle);
+            count++;
+        }
+        final int[] c = {0};
+
+        ProcessManager.getProcesses().forEach(process -> {
+            process.getResourceMap().getRequiredResources().forEach(resource -> {
+                if (process.getResourceMap().getAllocatedInstancesCount(resource) > 0) {
+                    drawAllocationEdge(resourceSquares.get(ResourceManager.getResources().indexOf(resource)),
+                            processCircles.get(c[0]));
+                }
+            });
+            c[0]++;
+        });
+
+        anchorPane.getChildren().addAll(resourceSquares);
+        c[0] = 0;
+
+        ProcessManager.getProcesses().forEach(process -> {
+            process.getResourceMap().getRequiredResources().forEach(resource -> drawRequestEdge(
+                    processCircles.get(c[0]), resourceSquares.get(
+                            ResourceManager.getResources().indexOf(resource))));
+            c[0]++;
+        });
+
+        anchorPane.getChildren().addAll(processCircles);
     }
 
     private void draw() {
@@ -67,17 +161,18 @@ public class RAGTest extends Application {
         ProcessCircle p2 = processAt(px2, px1, 1);
         ProcessCircle p3 = processAt(rx1 - 50, 200, 2);
 
+        drawAllocationEdge(r1, p3);
+
         anchorPane.getChildren().addAll(r1, r2, r3);
 
-        drawEdgeBetween(p1, r1);
-        drawEdgeBetween(p1, r3);
+        drawRequestEdge(p1, r1);
+        drawRequestEdge(p1, r3);
 
-        drawEdgeBetween(p2, r2);
-        drawEdgeBetween(p2, r1);
+        drawRequestEdge(p2, r2);
+        drawRequestEdge(p2, r1);
 
-        drawEdgeBetween(p3, r2);
-        drawEdgeBetween(p3, r3);
-
+        drawRequestEdge(p3, r2);
+        drawRequestEdge(p3, r3);
 
         anchorPane.getChildren().addAll(p1, p2, p3);
 

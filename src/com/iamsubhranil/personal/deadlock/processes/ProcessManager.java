@@ -40,7 +40,7 @@ public class ProcessManager {
             while (count < resourceNum) {
                 try {
                     resourceIntegerHashMap.put(ResourceManager.getResources().get(count),
-                            new Random().nextInt(ResourceManager.getResources().get(count).getTotalInstances() - 1) + 1);
+                            new Random().nextInt(ResourceManager.getResources().get(count).getTotalInstances()) - 1);
                 } catch (IllegalArgumentException iae) {
                     System.out.println(ResourceManager.getResources().get(count).getTotalInstances());
                 }
