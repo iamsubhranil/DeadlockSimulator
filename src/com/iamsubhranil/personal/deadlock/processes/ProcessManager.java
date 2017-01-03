@@ -8,6 +8,7 @@
 package com.iamsubhranil.personal.deadlock.processes;
 
 import com.iamsubhranil.personal.deadlock.resources.Resource;
+import com.iamsubhranil.personal.deadlock.resources.ResourceException;
 import com.iamsubhranil.personal.deadlock.resources.ResourceManager;
 
 import java.util.ArrayList;
@@ -29,6 +30,23 @@ public class ProcessManager {
 
     public static ArrayList<Process> getProcesses() {
         return processList;
+    }
+
+    public static void typicalDeadlock() {
+        Resource r1 = ResourceManager.generateNewResource("R1", 1);
+        Resource r2 = ResourceManager.generateNewResource("R2", 1);
+        HashMap<Resource, Integer> resourceIntegerHashMap = new HashMap<>();
+        resourceIntegerHashMap.put(r1, 1);
+        resourceIntegerHashMap.put(r2, 1);
+        Process p1 = generateNewProcess("P1", resourceIntegerHashMap);
+        Process p2 = generateNewProcess("P2", resourceIntegerHashMap);
+        try {
+            p1.getResourceMap().requestForResource(r1, 1);
+            p2.getResourceMap().requestForResource(r2, 1);
+        } catch (ResourceException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void dummyProcess(int processNum, int resourceNum) {
