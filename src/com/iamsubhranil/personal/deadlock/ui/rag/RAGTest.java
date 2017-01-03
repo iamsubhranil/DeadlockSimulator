@@ -37,7 +37,9 @@ public class RAGTest extends Application {
         primaryStage.setScene(s);
         primaryStage.show();
         //   draw();
-        manual();
+        //   manual();
+        ProcessManager.typicalDeadlock();
+        drawAll();
     }
 
     private ProcessCircle processAt(double x, double y, int count) {
@@ -139,9 +141,13 @@ public class RAGTest extends Application {
         c[0] = 0;
 
         ProcessManager.getProcesses().forEach(process -> {
-            process.getResourceMap().getRequiredResources().forEach(resource -> drawRequestEdge(
-                    processCircles.get(c[0]), resourceSquares.get(
-                            ResourceManager.getResources().indexOf(resource))));
+            process.getResourceMap().getRequiredResources().forEach(resource -> {
+                if (process.getResourceMap().getRemainderInstancesCount(resource) > 0) {
+                    drawRequestEdge(
+                            processCircles.get(c[0]), resourceSquares.get(
+                                    ResourceManager.getResources().indexOf(resource)));
+                }
+            });
             c[0]++;
         });
 
